@@ -4,12 +4,22 @@ from .serializers import TaskSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Tasks.objects.all()
+    serializer_class = TaskSerializer
+
+
 def task_form(request):
     return render(request, "task_form.html")
+
+
+def perform_create(self, serializer):
+    serializer.save(creador=self.request.user)
 
 
 @api_view(["GET", "POST", "PUT", "DELETE"])
